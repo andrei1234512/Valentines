@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffa5c6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating hearts background */
+        .heart-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            animation: float 10s infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center; /* 🔥 ito ang pinaka-importante */
+                text-align: center;
+                }
+
+
+        h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 180px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+            width: 100%;
+            position: relative;
+            transform: translateY(-80px);
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: all 0.6s ease;
+            top: 60px; 
+        }
+
+        .envelope-wrapper.open {
+            transform: translateX(-300px);
+        }
+
+        .envelope-instruction {
+            position: absolute;
+            top: 250px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            font-size: 1.1em;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .envelope {
+            position: relative;
+            width: 400px;
+            height: 250px;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope:hover {
+            transform: scale(1.05);
+        }
+
+        .envelope.open:hover {
+            transform: scale(1);
+        }
+
+        /* Envelope body (back rectangle) */
+        .envelope-body {
+            position: absolute;
+            width: 400px;
+            height: 250px;
+            background: #ffc4dd;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Bottom flaps (left and right triangles) */
+        .envelope-bottom-left {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 200px solid #ffb3d1;
+            border-top: 125px solid transparent;
+            border-bottom: 125px solid transparent;
+            bottom: 0;
+            left: 0;
+            border-radius: 0 0 0 10px;
+        }
+
+        .envelope-bottom-right {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-right: 200px solid #ffb3d1;
+            border-top: 125px solid transparent;
+            border-bottom: 125px solid transparent;
+            bottom: 0;
+            right: 0;
+            border-radius: 0 0 10px 0;
+        }
+
+        /* Top flap (triangle that closes the envelope) */
+        .envelope-flap {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 200px solid transparent;
+            border-right: 200px solid transparent;
+            border-top: 150px solid #ff8fb3;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            transform-origin: top center;
+            transition: transform 0.8s ease;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(-180deg);
+        }
+
+        /* Heart seal on the flap */
+        .heart-seal {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            z-index: 11;
+            animation: heartbeat 1.5s infinite;
+            transition: opacity 0.3s ease;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            25% { transform: translateX(-50%) scale(1.1); }
+            50% { transform: translateX(-50%) scale(1); }
+        }
+
+        .envelope.open .heart-seal {
+            opacity: 0;
+        }
+
+        /* Decorative dots on envelope */
+        .dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+        }
+
+        .dot:nth-child(1) { top: 20%; left: 10%; }
+        .dot:nth-child(2) { top: 40%; left: 15%; }
+        .dot:nth-child(3) { top: 60%; left: 12%; }
+        .dot:nth-child(4) { top: 70%; left: 20%; }
+        .dot:nth-child(5) { top: 30%; right: 15%; }
+        .dot:nth-child(6) { top: 50%; right: 10%; }
+        .dot:nth-child(7) { top: 65%; right: 18%; }
+        .dot:nth-child(8) { top: 80%; right: 12%; }
+
+        /* Letter styles */
+        .letter {
+            position: absolute;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            padding: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);  
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow-y: auto;
+            z-index: 5;
+            max-height: 450px;
+        }
+
+        .letter.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(300px, -50%);
+        }
+
+        .letter h2 {
+            color: #ff6b9d;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .letter p {
+            color: #333;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .signature {
+            text-align: right;
+            margin-top: 30px;
+            font-style: italic;
+            color: #ff6b9d;
+            font-size: 1.2em;
+        }
+
+        /* Yes/No Buttons */
+        .button-container {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .yes-btn, .no-btn {
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .yes-btn {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8fb3 100%);
+            color: white;
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255,107,157,0.5);
+        }
+
+        .no-btn {
+            background: #f0f0f0;
+            color: #666;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .no-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Thank You Message */
+        .thank-you {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .thank-you.show {
+            display: block;
+        }
+
+        .thank-you h3 {
+            color: #ff6b9d;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .baby-img {
+            width: 200px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .kiss {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            width: 50px;
+            height: 35px;
+            background: #ff6b9d;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform: rotate(-45deg);
+            opacity: 0.6;
+        }
+
+        .instruction {
+            color: white;
+            font-size: 1.3em;
+            margin-top: 50px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Scrollbar styling for letter */
+        .letter::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .letter::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .letter::-webkit-scrollbar-thumb {
+            background: #ff6b9d;
+            border-radius: 10px;
+        }
+
+        .letter::-webkit-scrollbar-thumb:hover {
+            background: #ff5588;
+        }
+
+        /* ============================================ */
+        /* RESPONSIVE STYLES - TABLET AND MOBILE */
+        /* ============================================ */
+
+        /* Tablet - Portrait and smaller laptops */
+        @media screen and (max-width: 1024px) {
+            h1 {
+                font-size: 2.5em;
+                margin-bottom: 100px;
+            }
+
+            .content-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                }
+
+
+            .envelope-wrapper {
+                width: 350px;
+                height: 260px;
+                top: 40px;
+            }
+
+            .envelope-wrapper.open {
+                transform: translateX(-220px);
+            }
+
+            .envelope {
+                width: 350px;
+                height: 220px;
+                margin-top: 10px;
+            }
+
+            .envelope-body {
+                width: 350px;
+                height: 220px;
+            }
+
+            .envelope-bottom-left {
+                border-left: 175px solid #ffb3d1;
+                border-top: 110px solid transparent;
+                border-bottom: 110px solid transparent;
+            }
+
+            .envelope-bottom-right {
+                border-right: 175px solid #ffb3d1;
+                border-top: 110px solid transparent;
+                border-bottom: 110px solid transparent;
+            }
+
+            .envelope-flap {
+                border-left: 175px solid transparent;
+                border-right: 175px solid transparent;
+                border-top: 130px solid #ff8fb3;
+            }
+
+            .heart-seal {
+                top: 70px;
+                font-size: 35px;
+            }
+
+            .envelope-instruction {
+                top: 220px;
+                font-size: 1em;
+            }
+
+            .letter {
+                width: 320px;
+                height: 450px;
+                max-height: 400px;
+                padding: 30px;
+            }
+
+            .letter.show {
+                transform: translate(230px, -50%);
+            }
+
+            .letter h2 {
+                font-size: 1.8em;
+            }
+
+            .letter p {
+                font-size: 1em;
+            }
+        }
+
+        /* Mobile - Landscape and smaller tablets */
+        @media screen and (max-width: 768px) {
+            body {
+                overflow-y: auto;
+                overflow-x: hidden;
+                align-items: flex-start;
+                padding-top: 30px;
+                padding-bottom: 120px;
+            }
+
+            h1 {
+                font-size: 2em;
+                margin-bottom: 40px;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 150;
+                width: 100%;
+                margin: 0;
+            }
+
+            .container {
+                justify-content: flex-start;
+                padding: 20px;
+            }
+
+            .title {
+                margin-bottom: 40px;
+                font-size: clamp(24px, 6vw, 34px);
+            }
+            .content-wrapper {
+                flex: 1; 
+                flex-direction: column;
+                gap: 20px;
+                transform: translateY(0);
+                padding: 0 20px;
+                min-height: auto;
+                margin-top: 0;
+            }
+
+            .envelope-wrapper {
+                width: 300px;
+                height: 220px;
+                top: 0;
+                position: relative;
+                z-index: 50;
+                margin-top: 20px;
+            }
+
+            .envelope-wrapper.open {
+                transform: translateX(0);
+            }
+
+            .envelope {
+                width: 300px;
+                height: 190px;
+            }
+
+            .envelope-body {
+                width: 300px;
+                height: 190px;
+            }
+
+            .envelope-bottom-left {
+                border-left: 150px solid #ffb3d1;
+                border-top: 95px solid transparent;
+                border-bottom: 95px solid transparent;
+            }
+
+            .envelope-bottom-right {
+                border-right: 150px solid #ffb3d1;
+                border-top: 95px solid transparent;
+                border-bottom: 95px solid transparent;
+            }
+
+            .envelope-flap {
+                border-left: 150px solid transparent;
+                border-right: 150px solid transparent;
+                border-top: 115px solid #ff8fb3;
+            }
+
+            .heart-seal {
+                top: 60px;
+                font-size: 30px;
+            }
+
+            .envelope-instruction {
+                top: 190px;
+                font-size: 0.95em;
+                white-space: nowrap;
+            }
+
+            .letter {
+                position: absolute;
+                width: 85%;
+                max-width: 400px;
+                height: auto;
+                max-height: none;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.8);
+                margin: 0;
+                padding: 30px;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                z-index: 200;
+            }
+
+            .letter.show {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .letter h2 {
+                font-size: 1.6em;
+                margin-bottom: 15px;
+            }
+
+            .letter p {
+                font-size: 0.95em;
+                line-height: 1.6;
+                margin-bottom: 12px;
+            }
+
+            .signature {
+                font-size: 1.1em;
+                margin-top: 20px;
+            }
+
+            .button-container {
+                margin-top: 20px;
+                gap: 15px;
+            }
+
+            .yes-btn, .no-btn {
+                padding: 12px 30px;
+                font-size: 1.1em;
+            }
+
+            .thank-you h3 {
+                font-size: 1.6em;
+            }
+
+            .baby-img {
+                width: 150px;
+            }
+
+            .kiss {
+                width: 40px;
+                height: 28px;
+                bottom: 20px;
+                right: 25px;
+            }
+        }
+
+        /* Mobile - Portrait */
+        @media screen and (max-width: 480px) {
+            h1 {
+                font-size: 1.6em;
+                 margin-bottom: 30px;
+            }
+
+            .envelope-wrapper {
+                width: 260px;
+                height: 190px;
+            }
+
+            .envelope {
+                width: 260px;
+                height: 165px;
+            }
+
+            .envelope-body {
+                width: 260px;
+                height: 165px;
+            }
+
+            .envelope-bottom-left {
+                border-left: 130px solid #ffb3d1;
+                border-top: 82.5px solid transparent;
+                border-bottom: 82.5px solid transparent;
+            }
+
+            .envelope-bottom-right {
+                border-right: 130px solid #ffb3d1;
+                border-top: 82.5px solid transparent;
+                border-bottom: 82.5px solid transparent;
+            }
+
+            .envelope-flap {
+                border-left: 130px solid transparent;
+                border-right: 130px solid transparent;
+                border-top: 100px solid #ff8fb3;
+            }
+
+            .heart-seal {
+                top: 52px;
+                font-size: 26px;
+            }
+
+            .dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .envelope-instruction {
+                top: 165px;
+                font-size: 0.85em;
+            }
+
+            .letter {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .letter h2 {
+                font-size: 1.4em;
+            }
+
+            .letter p {
+                font-size: 0.9em;
+            }
+
+            .signature {
+                font-size: 1em;
+            }
+
+            .yes-btn, .no-btn {
+                padding: 10px 25px;
+                font-size: 1em;
+            }
+
+            .thank-you h3 {
+                font-size: 1.4em;
+            }
+
+            .baby-img {
+                width: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="heart-bg" id="heartBg"></div>
+    
+    <div class="container">
+        <h1>💕 Be My Valentine 💕</h1>
+        
+        <div class="content-wrapper">
+            <div class="envelope-wrapper" id="envelopeWrapper">
+                <div class="envelope" id="envelope">
+                    <!-- Envelope body -->
+                    <div class="envelope-body">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                    
+                    <!-- Bottom flaps -->
+                    <div class="envelope-bottom-left"></div>
+                    <div class="envelope-bottom-right"></div>
+                    
+                    <p class="instruction envelope-instruction" id="instruction">
+                        ✨ Click the envelope to read the letter ✨
+                    </p>
+                    <!-- Top flap -->
+                    <div class="envelope-flap"></div>
+                    
+                    <!-- Heart seal -->
+                    <div class="heart-seal">💖</div>
+                </div>
+                
+                <!-- Letter -->
+                <div class="letter" id="letter">
+                    <h2>My Dearest Valentine ❤️</h2>
+                    <p>From the moment I met you, my world became brighter and more colorful. You bring joy to my days and warmth to my heart.</p>
+                    <p>Every smile you share, every laugh we have together, and every moment we spend creates memories I cherish deeply.</p>
+                    <p>This Valentine's Day, I want you to know how special you are to me. You make everything better just by being you.</p>
+                    <p>Your kindness, your laughter, and the way you see the world inspire me every single day. I feel so lucky to have you in my life.</p>
+                    <p>Will you be my Valentine? Not just today, but every day that follows?</p>
+                    <div class="signature">
+                        With all my love,<br>
+                        Your Secret Admirer 💝
+                    </div>
+                    
+                    <!-- Yes/No Buttons -->
+                    <div class="button-container" id="buttonContainer">
+                        <button class="yes-btn" id="yesBtn">Yes!</button>
+                        <button class="no-btn" id="noBtn">No</button>
+                    </div>
+                    
+                    <!-- Thank You Message (hidden initially) -->
+                    <div class="thank-you" id="thankYou">
+                        <h3>Thank you! 🎉</h3>
+                        <img src="baby.jpg" alt="Happy Baby" class="baby-img">
+                    </div>
+                    
+                    <div class="kiss"></div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <script>
+        // Envelope click functionality
+        const envelope = document.getElementById('envelope');
+        const envelopeWrapper = document.getElementById('envelopeWrapper');
+        const letter = document.getElementById('letter');
+        const instruction = document.getElementById('instruction');
+        let isOpen = false;
+
+        envelopeWrapper.addEventListener('click', function() {
+            if (!isOpen) {
+                envelope.classList.add('open');
+                envelopeWrapper.classList.add('open');
+                letter.classList.add('show');
+                instruction.textContent = '✨ Click again to close ✨';
+                isOpen = true;
+                
+                // Create confetti effect
+                createConfetti();
+            } else {
+                envelope.classList.remove('open');
+                envelopeWrapper.classList.remove('open');
+                letter.classList.remove('show');
+                instruction.textContent = '✨ Click the envelope to read the letter ✨';
+                isOpen = false;
+            }
+        });
+
+        // Yes/No Button functionality
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const buttonContainer = document.getElementById('buttonContainer');
+        const thankYou = document.getElementById('thankYou');
+
+        // Yes button - show thank you message
+        yesBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent envelope from closing
+            buttonContainer.style.display = 'none';
+            thankYou.classList.add('show');
+            createConfetti();
+        });
+
+        // No button - move away from cursor
+        noBtn.addEventListener('mouseover', function(e) {
+            e.stopPropagation();
+            const btn = e.target;
+            const letterRect = letter.getBoundingClientRect();
+            
+            // Get random position within the letter bounds
+            const maxX = 150;
+            const maxY = 100;
+            const randomX = Math.random() * maxX - maxX/2;
+            const randomY = Math.random() * maxY - maxY/2;
+            
+            btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        });
+
+        // Prevent No button click
+        noBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        // Create floating hearts background
+        function createFloatingHearts() {
+            const heartBg = document.getElementById('heartBg');
+            const hearts = ['❤️', '💕', '💖', '💗', '💝', '💘'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                
+                heartBg.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 13000);
+            }, 800);
+        }
+
+        // Create confetti effect when envelope opens
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#ffa5c6', '#ff8fb3', '#ffb3d1', '#ff69b4'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = '50%';
+                    confetti.style.top = '50%';
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.zIndex = '1000';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = Math.random() * 300 + 200;
+                    const vx = Math.cos(angle) * velocity;
+                    const vy = Math.sin(angle) * velocity;
+                    
+                    let x = 0;
+                    let y = 0;
+                    let opacity = 1;
+                    
+                    const animation = setInterval(() => {
+                        x += vx * 0.016;
+                        y += vy * 0.016 + 200 * 0.016;
+                        opacity -= 0.02;
+                        
+                        confetti.style.transform = `translate(${x}px, ${y}px)`;
+                        confetti.style.opacity = opacity;
+                        
+                        if (opacity <= 0) {
+                            clearInterval(animation);
+                            confetti.remove();
+                        }
+                    }, 16);
+                }, i * 20);
+            }
+        }
+
+        createFloatingHearts();
+    </script>
+</body>
+</html>
